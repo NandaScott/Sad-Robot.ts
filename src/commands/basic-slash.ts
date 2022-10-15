@@ -1,15 +1,15 @@
 import { SlashCommandBuilder } from "discord.js";
 import { ChatCommandCallback } from "./types/execute-command-callback";
 
-const ping = new SlashCommandBuilder()
-  .setName('ping')
-  .setDescription('Replies with Pong!')
+const basicSlash = new SlashCommandBuilder()
+  .setName('basic')
+  .setDescription('Replies with your name.')
 
 const execute: ChatCommandCallback = async (interaction) => {
-  await interaction.reply('Pong!')
+  await interaction.reply(interaction.user.username)
 }
 
 export default {
-  data: ping,
+  data: basicSlash,
   execute
 }

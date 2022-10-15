@@ -1,7 +1,11 @@
-import ping from "./ping";
-import server from "./server";
+import basicSlash from "./basic-slash";
+import slashWithOptions from "./slash-w-options";
+import buttons from "./buttons";
+import select from "./select";
 
 export default [
-  ping,
-  server
+  basicSlash,
+  slashWithOptions,
+  buttons,
+  select
 ] as const
