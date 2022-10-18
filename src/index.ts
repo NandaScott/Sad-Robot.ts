@@ -15,18 +15,27 @@ client.once('ready', () => {
 })
 
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = comman.get(interaction.commandName);
-
-  if (!command) return;
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+  if (interaction.isButton()) {
+    interaction.reply({ content: interaction.customId, ephemeral: true })
   }
+
+  if (interaction.isSelectMenu()) {
+    interaction.reply({ content: interaction.values[0], ephemeral: true })
+  }
+
+  if (interaction.isChatInputCommand()) {
+    const command = comman.get(interaction.commandName);
+
+    if (!command) return;
+
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    }
+  }
+
 })
 
 client.login(process.env.TOKEN);
