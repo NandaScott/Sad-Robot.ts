@@ -57,7 +57,7 @@ export default interface ScryfallCard {
   games: Games[];
   highres_image: boolean;
   illustration_id?: string;
-  image_uris?: ImageUris;
+  image_uris: ImageUris;
   prices: Prices;
   printed_name?: string;
   printed_text?: string;
@@ -83,7 +83,7 @@ export default interface ScryfallCard {
   preview: Preview;
 }
 
-interface CardFace {
+export interface CardFace {
   artist: string;
   color_indicator: Color[] | [];
   colors: Color[] | [];
