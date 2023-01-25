@@ -1,10 +1,14 @@
 import Axios, { AxiosResponse } from 'axios';
+import { stripProps } from './request-transformers';
 import ScryfallCard from './scryfall-card';
 import { Catalog, Rulings } from './scryfall-responses';
 
 const scryfall = Axios.create({
   baseURL: 'https://api.scryfall.com',
-  params: {}
+  params: {},
+  transformResponse: [
+    stripProps
+  ]
 });
 
 scryfall.interceptors.request.use(
@@ -25,6 +29,10 @@ scryfall.interceptors.response.use((response) => {
   response.config.params.timeData.calc = parseFloat(((duration / 1000) % 60).toString())
   return response;
 }, (error) => Promise.reject(error));
+
+type MinimumProps = 'id' | 'name' | 'scryfall_uri' | 'layout' | 'image_uris'
+
+export type NormalizedCard = Pick<ScryfallCard, MinimumProps>
 
 export async function getCardByName(name: string, set?: string): Promise<AxiosResponse<ScryfallCard>> {
   const params = {
@@ -62,7 +70,7 @@ export async function getCardByCodeNumber(code: string, number: number): Promise
     })
 }
 
-export async function getCardById(id: string): Promise<AxiosResponse<ScryfallCard>> {
+export async function getCardById(id: string): Promise<AxiosResponse<NormalizedCard[]>> {
   return scryfall.get(`/cards/${id}`)
     .catch((err) => {
       console.log(err);

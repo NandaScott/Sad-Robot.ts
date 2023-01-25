@@ -13,7 +13,7 @@ export default interface ScryfallCard {
   prints_search_uri: string;
   rulings_uri: string;
   scryfall_id: string;
-  uri: string;
+  scryfall_uri: string;
 
   // Gameplay fields
   all_parts?: RelatedCard[];
@@ -121,7 +121,7 @@ type RelatedCardComponent =
 
 type Color = 'W' | 'U' | 'B' | 'R' | 'G';
 
-type ImageUris = {
+export type ImageUris = {
   small: string;
   normal: string;
   large: string;
@@ -130,7 +130,7 @@ type ImageUris = {
   border_crop: string;
 };
 
-type Layout =
+export type Layout =
   | 'normal'
   | 'split'
   | 'flip'
@@ -138,6 +138,7 @@ type Layout =
   | 'modal_dfc'
   | 'meld'
   | 'leveler'
+  | 'class'
   | 'saga'
   | 'adventure'
   | 'planar'
@@ -149,7 +150,7 @@ type Layout =
   | 'augment'
   | 'host'
   | 'art_series'
-  | 'double_sided';
+  | 'reversible_card'
 
 type Frame = '1993' | '1997' | '2003' | '2015' | 'future';
 
