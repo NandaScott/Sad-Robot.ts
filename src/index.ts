@@ -25,23 +25,29 @@ client.once('ready', () => {
 })
 
 client.on('messageCreate', async (message) => {
-  const { author, content } = message;
-  if (author.bot) return;
+  // This should be handled better
+  try {
+    const { author, content } = message;
+    if (author.bot) return;
 
-  if (!isCardDeclaration(content)) return;
+    if (!isCardDeclaration(content)) return;
 
-  const cardDecs = getCardDeclarations(content)
-  const cards = scrubDeclarationSyntax(cardDecs)
-  const scryfallResp = fetchAllCards(cards)
-  const resolvedCards = await resolveScryfallResp(scryfallResp)
-  const row = new ActionRowBuilder<ButtonBuilder>()
-    .addComponents(resolvedCards.map((card) =>
-      new ButtonBuilder()
-        .setCustomId(card.id)
-        .setLabel(card.name)
-        .setStyle(ButtonStyle.Primary)
-    ))
-  await message.reply({ components: [row] })
+    const cardDecs = getCardDeclarations(content)
+    const cards = scrubDeclarationSyntax(cardDecs)
+    const scryfallResp = fetchAllCards(cards)
+    const resolvedCards = await resolveScryfallResp(scryfallResp)
+    const row = new ActionRowBuilder<ButtonBuilder>()
+      .addComponents(resolvedCards.map((card) =>
+        new ButtonBuilder()
+          .setCustomId(card.id)
+          .setLabel(card.name)
+          .setStyle(ButtonStyle.Primary)
+      ))
+    await message.reply({ components: [row] })
+  } catch (e) {
+    console.error(e)
+    await message.reply({ content: "Something went wrong." })
+  }
 })
 
 client.on('interactionCreate', async (interaction) => {
