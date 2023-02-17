@@ -5,6 +5,7 @@ import CommandManager from "./command-manager";
 import deploy from './deploy-commands';
 import buttonHandler from "./handlers/button-handler";
 import { fetchAllCards, getCardDeclarations, getUniqueBy, isCardDeclaration, resolveScryfallResp, scrubDeclarationSyntax } from './utils/utils'
+import truncate from 'lodash/truncate';
 
 dotenv.config()
 
@@ -41,7 +42,7 @@ client.on('messageCreate', async (message) => {
       .addComponents(uniqueCards.map((card) =>
         new ButtonBuilder()
           .setCustomId(card.id)
-          .setLabel(card.name)
+          .setLabel(truncate(card.name, { length: 25 }))
           .setStyle(ButtonStyle.Primary)
       ))
     await message.reply({ components: [row] })
