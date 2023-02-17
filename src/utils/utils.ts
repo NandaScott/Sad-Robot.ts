@@ -30,3 +30,8 @@ export async function resolveScryfallResp(resp: Promise<AxiosResponse<ScryfallCa
     .then((cards) => res(cards.map((card) => card.data)))
     .catch((err) => { console.error(err); rej(err) }))
 }
+
+export function getUniqueBy<T extends ScryfallCard>(cards: T[], prop: keyof T) {
+  const unique = new Set()
+  return cards.filter((card) => !unique.has(card[prop]) && unique.add(card[prop]))
+}

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import CommandManager from "./command-manager";
 import deploy from './deploy-commands';
 import buttonHandler from "./handlers/button-handler";
-import { fetchAllCards, getCardDeclarations, isCardDeclaration, resolveScryfallResp, scrubDeclarationSyntax } from './utils/utils'
+import { fetchAllCards, getCardDeclarations, getUniqueBy, isCardDeclaration, resolveScryfallResp, scrubDeclarationSyntax } from './utils/utils'
 
 dotenv.config()
 
@@ -36,8 +36,9 @@ client.on('messageCreate', async (message) => {
     const cards = scrubDeclarationSyntax(cardDecs)
     const scryfallResp = fetchAllCards(cards)
     const resolvedCards = await resolveScryfallResp(scryfallResp)
+    const uniqueCards = getUniqueBy(resolvedCards, 'id')
     const row = new ActionRowBuilder<ButtonBuilder>()
-      .addComponents(resolvedCards.map((card) =>
+      .addComponents(uniqueCards.map((card) =>
         new ButtonBuilder()
           .setCustomId(card.id)
           .setLabel(card.name)
