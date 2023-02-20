@@ -1,11 +1,5 @@
-import basicSlash from "./basic-slash";
-import slashWithOptions from "./slash-w-options";
-import buttons from "./buttons";
-import select from "./select";
+import code from './code';
 
 export default [
-  basicSlash,
-  slashWithOptions,
-  buttons,
-  select
+  code
 ] as const
