@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits, Events } from "discord.js";
+import MessageHandler from "./src/MessageHandler";
 
 const client = new Client({
   intents: [
@@ -17,7 +18,8 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
 
   if (message.content.toLowerCase() === 'ping') {
-    await message.reply('Pong!')
+    const messageHandler = new MessageHandler(message.channel, 'Pong!');
+    messageHandler.send();
   }
 });
 
