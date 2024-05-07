@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, Events } from "discord.js";
-import MessageHandler from "./src/MessageHandler";
+import MessageHandler from "./src/handlers/MessageHandler";
 
 const client = new Client({
   intents: [
