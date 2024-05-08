@@ -1,4 +1,4 @@
-import channelTypes from "../utils/channel-types";
+import channelTypes from "../../utils/channel-types";
 import AbstractMessageHandler, { Channel } from "./AbstractMessageHandler";
 
 export default class MessageHandler extends AbstractMessageHandler {
