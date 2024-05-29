@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import ScryfallCardModel from './src/handlers/ScryfallCard/ScryfallCardModel';
 
 export interface CustomResponseData {
@@ -6,11 +6,20 @@ export interface CustomResponseData {
   responseTime: number;
 }
 
+export interface CustomScryfallConfig extends AxiosRequestConfig<T> {
+  ctx?: {
+    author: string;
+    sentAt: number;
+    content: string;
+    callingFunction: string;
+  };
+}
+
 declare module 'axios' {
   interface AxiosInstance {
     get<T = CustomResponseData>(
       url: string,
-      config?: AxiosRequestConfig<T>
-    ): Promise<AxiosResponse<T, CustomResponseData>>;
+      config?: CustomScryfallConfig<T>
+    ): Promise<AxiosResponse<T, T>>;
   }
 }
