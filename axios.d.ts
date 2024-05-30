@@ -10,8 +10,11 @@ export interface CustomScryfallConfig extends AxiosRequestConfig<T> {
   ctx?: {
     author: string;
     sentAt: number;
-    content: string;
     callingFunction: string;
+    message: {
+      content: string;
+      reply: (msg: string) => void;
+    };
   };
 }
 

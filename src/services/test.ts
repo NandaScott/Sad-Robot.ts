@@ -1,32 +1,43 @@
+import { CustomScryfallConfig } from '../../axios';
 import { ScryfallAxiosError } from '../configs/scryfall-axios';
+import OutputFactory from '../handlers/output/OutputFactory';
 import ScryfallService from './ScryfallService';
-
-process.on('uncaughtException', (error) => {
-  console.log(error);
-});
 
 process.on('unhandledRejection', (reason: ScryfallAxiosError) => {
   if (reason.name === 'ScryfallError') {
-    // handleScryfallError
-    console.log(
-      `[${new Date().toISOString()}] ${reason.name}: ${reason.scryfall.details}`
-    );
+    // Send reply to user
+    const replyHandler = OutputFactory.createOutput('reply');
+    replyHandler.addContents('[Mock reply] ' + reason.scryfall.details);
+    replyHandler.addContext(reason.ctx);
+    replyHandler.save();
   }
+
+  // Log error to file
+  const logHandler = OutputFactory.createOutput('logs');
+  logHandler.error(`${reason.name}: ${reason.message}`);
 });
 
-async function test() {
+async function mockFunctionCall() {
   const scryfallService = new ScryfallService();
-
-  scryfallService.getCard(
-    {
-      author: 'Me',
-      sentAt: Date.now(),
-      content: "I'm sending [[Not a Card]]",
-      callingFunction: 'test',
+  const context: CustomScryfallConfig['ctx'] = {
+    author: 'Me',
+    sentAt: Date.now(),
+    callingFunction: 'test',
+    message: {
+      content: '',
+      reply: console.log,
     },
-    'Not a Card',
-    'exact'
-  );
+  };
+
+  // This will fail
+  context.message.content = "I'm sending a [[Not a Card]]";
+  const card = await scryfallService.getCard(context, 'Not a Card', 'exact');
+
+  if (!card) {
+    throw new Error('Card not found');
+  }
+
+  console.log(card);
 }
 
-test();
+mockFunctionCall();
