@@ -7,29 +7,36 @@ import ScryfallCardModel, {
 } from '../../types/ScryfallCardModel/ScryfallCardModel';
 import SingleFacedScryfallCard from './SingleFacedScryfallCard';
 import { CustomScryfallConfig } from '../../../axios';
+import LayoutNotFound from '../../errors/LayoutNotFound';
 
 export default class ScryfallCardFactory {
   private data: ScryfallCardModel;
-  private ctx: CustomScryfallConfig['ctx'];
+  private context: CustomScryfallConfig['ctx'];
 
   constructor(data: ScryfallCardModel, ctx: CustomScryfallConfig['ctx']) {
     this.data = data;
-    this.ctx = ctx;
+    this.context = ctx;
   }
 
   createCard(): SingleFacedScryfallCard | DoubleFacedScryfallCard {
     if (this.data.layout in singleLayouts) {
       return new SingleFacedScryfallCard(
         this.data as SingleFacedCard,
-        this.ctx
+        this.context
       );
     }
 
     if (this.data.layout in doubleLayouts) {
-      return new DoubleFacedScryfallCard(this.data as MutliFacedCard, this.ctx);
+      return new DoubleFacedScryfallCard(
+        this.data as MutliFacedCard,
+        this.context
+      );
     }
 
-    throw new Error(`Layout not found for ${this.data.name}`);
+    throw new LayoutNotFound(
+      `Layout not found for ${this.data.name}`,
+      this.context
+    );
   }
 }
 
