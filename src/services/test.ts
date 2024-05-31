@@ -1,9 +1,12 @@
 import { CustomScryfallConfig } from '../../axios';
+import ImageUriError from '../errors/ImageUriError';
 import ScryfallError from '../errors/ScryfallError';
 import OutputFactory from '../handlers/output/OutputFactory';
 import ScryfallService from './ScryfallService';
 
-process.on('unhandledRejection', (reason: ScryfallError | Error) => {
+type Errors = ScryfallError | ImageUriError | Error;
+
+process.on('unhandledRejection', (reason: Errors) => {
   if (reason instanceof ScryfallError) {
     // Send reply to user
     const replyHandler = OutputFactory.createOutput('reply');

@@ -1,7 +1,11 @@
-import ScryfallCardModel from './ScryfallCardModel';
+import { CustomScryfallConfig } from '../../../axios';
+import ScryfallCardModel from '../../types/ScryfallCardModel/ScryfallCardModel';
 
 export default abstract class AbstractScryfallCard {
   abstract data: ScryfallCardModel;
+  abstract ctx: CustomScryfallConfig['ctx'];
+
+  constructor(data: ScryfallCardModel, ctx: CustomScryfallConfig['ctx']) {}
 
   abstract get image(): string;
   abstract get name(): string;

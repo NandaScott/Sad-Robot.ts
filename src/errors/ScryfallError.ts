@@ -12,7 +12,7 @@ export default class ScryfallError extends CustomError {
   data: CustomResponseData<ScryfallResponseError> | undefined;
 
   constructor(error: AxiosScryfallError, ctx: CustomScryfallConfig['ctx']) {
-    super(error, ctx);
+    super(error.message);
     this.context = ctx;
     this.data = error.response?.data;
 

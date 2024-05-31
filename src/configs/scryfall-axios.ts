@@ -1,5 +1,5 @@
 import axios, { CreateAxiosDefaults } from 'axios';
-import ScryfallCardModel from '../handlers/ScryfallCard/ScryfallCardModel';
+import ScryfallCardModel from '../types/ScryfallCardModel/ScryfallCardModel';
 import delay from '../utils/delay';
 
 const scryfallConfig: CreateAxiosDefaults<ScryfallCardModel> = {

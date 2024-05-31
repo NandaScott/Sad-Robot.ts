@@ -1,19 +1,29 @@
 import AbstractScryfallCard from './AbstractScryfallCard';
-import { SingleFacedCard } from './ScryfallCardModel';
+import { SingleFacedCard } from '../../types/ScryfallCardModel/ScryfallCardModel';
+import { CustomScryfallConfig } from '../../../axios';
+import ImageUriError from '../../errors/ImageUriError';
 
 export default class SingleFacedScryfallCard implements AbstractScryfallCard {
   readonly data: SingleFacedCard;
+  readonly ctx: CustomScryfallConfig['ctx'];
 
-  constructor(data: SingleFacedCard) {
+  constructor(data: SingleFacedCard, ctx: CustomScryfallConfig['ctx']) {
     this.data = data;
+    this.ctx = ctx;
   }
 
   get image(): string {
     if (!this.data.image_uris) {
-      throw new Error(`No images available for ${this.data.name}`);
+      throw new ImageUriError(
+        `No images available for ${this.data.name}`,
+        this.ctx
+      );
     }
     if (!this.data.image_uris.normal) {
-      throw new Error(`No normal images available for ${this.data.name}`);
+      throw new ImageUriError(
+        `No normal images available for ${this.data.name}`,
+        this.ctx
+      );
     }
 
     return this.data.image_uris.normal;

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import ScryfallCardModel from './src/handlers/ScryfallCard/ScryfallCardModel';
+import ScryfallCardModel from './src/types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from './src/types/ScryfallResponseError/ScryfallResponseError';
 
 export interface CustomResponseData<T> {
