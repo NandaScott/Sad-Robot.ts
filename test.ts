@@ -1,8 +1,8 @@
-import { CustomScryfallConfig } from '../../axios';
-import ImageUriError from '../errors/ImageUriError';
-import ScryfallError from '../errors/ScryfallError';
-import OutputFactory from '../handlers/output/OutputFactory';
-import ScryfallService from './ScryfallService';
+import { CustomScryfallConfig } from './axios';
+import ImageUriError from './src/errors/ImageUriError';
+import ScryfallError from './src/errors/ScryfallError';
+import OutputFactory from './src/handlers/OutputHandlers/OutputFactory';
+import ScryfallService from './src/services/ScryfallService';
 
 type Errors = ScryfallError | ImageUriError | Error;
 
@@ -22,6 +22,7 @@ process.on('unhandledRejection', (reason: Errors) => {
 
 async function mockFunctionCall() {
   const scryfallService = new ScryfallService();
+  // This is going to be the context surrounding the invocation of this function.
   const context: CustomScryfallConfig['ctx'] = {
     author: 'Me',
     sentAt: Date.now(),

@@ -34,19 +34,20 @@ scryfall.interceptors.request.use(async (config) => {
   return config;
 });
 
+function getSecondsFromLastRequest() {
+  const now = new Date();
+  const last = new Date(lastRequestTime);
+  const seconds = (now.getTime() - last.getTime()) / 1000;
+  return seconds;
+}
+
 scryfall.interceptors.response.use(
   (resp) => {
-    const now = new Date();
-    const last = new Date(lastRequestTime);
-    const seconds = (now.getTime() - last.getTime()) / 1000;
-    resp.data.responseTime = seconds;
+    resp.data.responseTime = getSecondsFromLastRequest();
     return resp;
   },
   (error) => {
-    const now = new Date();
-    const last = new Date(lastRequestTime);
-    const seconds = (now.getTime() - last.getTime()) / 1000;
-    error.response.data.responseTime = seconds;
+    error.response.data.responseTime = getSecondsFromLastRequest();
     throw error;
   }
 );

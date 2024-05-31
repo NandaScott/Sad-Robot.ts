@@ -1,4 +1,4 @@
-import Logger from '../../configs/Logger';
+import Logger from './Logger';
 import NoOutputSpecified from '../../errors/NoOutputSpecified';
 import FileHandler from './FileHandler/FileHandler';
 import ReplyHandler from './ReplyHandler/ReplyHandler';

@@ -1,5 +1,5 @@
 import { CustomScryfallConfig } from '../../../../axios';
-import AbstractOutputHandler from '../../output/AbstractOutputHandler';
+import AbstractOutputHandler from '../AbstractOutputHandler';
 
 export default class ReplyHandler implements AbstractOutputHandler {
   ctx: CustomScryfallConfig['ctx'];

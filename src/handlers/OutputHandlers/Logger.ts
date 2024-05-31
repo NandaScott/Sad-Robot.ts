@@ -1,5 +1,5 @@
 import path from 'path';
-import FileHandler from '../handlers/output/FileHandler/FileHandler';
+import FileHandler from './FileHandler/FileHandler';
 
 export default class Logger {
   private logLevel: 'info' | 'warning' | 'error' = 'info';
@@ -12,7 +12,7 @@ export default class Logger {
     const date = new Date().toISOString().slice(0, 10);
     this.date = date;
     this.fileName = `${date}-${this.logLevel}.log`;
-    this.logPath = path.normalize(__dirname + '../../../logs');
+    this.logPath = path.normalize(__dirname + '../../../../logs');
     this.handler = handler;
     this.handler.config(this.logPath, this.fileName);
   }
