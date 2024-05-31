@@ -1,4 +1,4 @@
-export default interface ScryfallError {
+export default interface ScryfallResponseError {
   /** An integer HTTP status code for this error. */
   status: number;
   /** A computer-friendly string representing the appropriate HTTP status code. */
