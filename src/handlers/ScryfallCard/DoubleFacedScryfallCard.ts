@@ -2,6 +2,7 @@ import AbstractScryfallCard from './AbstractScryfallCard';
 import { MutliFacedCard } from '../../types/ScryfallCardModel/ScryfallCardModel';
 import { CustomScryfallConfig } from '../../../axios';
 import ImageUriError from '../../errors/ImageUriError';
+import OracleNotFound from '../../errors/OracleNotFound';
 
 export default class DoubleFacedScryfallCard implements AbstractScryfallCard {
   readonly data: MutliFacedCard;
@@ -35,7 +36,10 @@ export default class DoubleFacedScryfallCard implements AbstractScryfallCard {
 
   get oracle(): string {
     if (!this.data.oracle_text) {
-      throw new Error(`No oracle_text available for ${this.data.name}`);
+      throw new OracleNotFound(
+        `No oracle_text available for ${this.data.name}`,
+        this.ctx
+      );
     }
     return this.data.oracle_text;
   }
