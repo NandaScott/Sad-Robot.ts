@@ -1,4 +1,5 @@
 import Logger from '../../configs/Logger';
+import NoOutputSpecified from '../../errors/NoOutputSpecified';
 import FileHandler from './FileHandler/FileHandler';
 import ReplyHandler from './ReplyHandler/ReplyHandler';
 
@@ -16,7 +17,7 @@ export default class OutputFactory {
         return new ReplyHandler();
       }
       default:
-        throw new Error('No Output Specified');
+        throw new NoOutputSpecified('No Output Specified');
     }
   }
 }
