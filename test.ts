@@ -9,6 +9,8 @@ import ScryfallService from './src/services/ScryfallService';
 
 type Errors = ScryfallError | ImageUriError | Error;
 
+const axiosConfig = Bun.argv.includes('--network-no-op') ? blackhole : scryfall;
+
 process.on('unhandledRejection', (reason: Errors) => {
   if (reason instanceof ScryfallError) {
     // Send reply to user
@@ -23,8 +25,6 @@ process.on('unhandledRejection', (reason: Errors) => {
   logHandler.error(`${reason.name}: ${reason.message}`);
 });
 
-const axiosConfig = Bun.argv.includes('--network-no-op') ? blackhole : scryfall;
-
 async function mockFunctionCall() {
   const scryfallService = new ScryfallService(axiosConfig);
   // This is going to be the context surrounding the invocation of this function.
@@ -33,7 +33,8 @@ async function mockFunctionCall() {
     sentAt: Date.now(),
     callingFunction: 'test',
     message: {
-      content: '[[Drowner of Truth]] [[bolt]] [[Not a Card]]',
+      content:
+        '[[Black Lotus]] [[Mox Diamond]] [[Mox Sapphire]] [[Mox Jet]] [[Mox Ruby]] [[Mox Emerald]] [[Timewalk]] [[Ancestrall Recall]] [[Timetwister]] [[Thal]] [[Omnath]] [[Not a Card]] [[Also Not a Card]]',
       reply: console.log,
     },
   };
@@ -45,7 +46,8 @@ async function mockFunctionCall() {
   );
 
   const responses = await ScryfallService.allSettled(requests);
-  // { successes: [], failures: [] }
+
+  console.log(JSON.stringify(responses)); // { successes: [], failures: [] }
 }
 
 mockFunctionCall();

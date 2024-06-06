@@ -3,47 +3,20 @@ import {
   GatewayIntentBits,
   Events,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   ComponentType,
+  AnyComponentBuilder,
 } from 'discord.js';
-
-const thal = [
-  'Thallid',
-  'Thalakos Seer',
-  'Thalakos Scout',
-  "Thalia's Lancers",
-  'Thalakos Sentry',
-  'Thallid Devourer',
-  'Thallid Omnivore',
-  'Thalakos Mistfolk',
-  'Thalakos Lowlands',
-  'Thalakos Deceiver',
-  'Thalakos Drifters',
-  'Thallid Soothsayer',
-  'Thallid Germinator',
-  "Thalia's Lieutenant",
-  'Thalakos Dreamsower',
-  "Thalia's Geistcaller",
-  'Thalia, Heretic Cathar',
-  'Thallid Shell-Dweller',
-  'Thalisse, Reverent Medium',
-  'Thalia, Guardian of Thraben',
-].map((val) => new StringSelectMenuOptionBuilder().setLabel(val).setValue(val));
-
-const omnath = [
-  'Omnath, Locus of All',
-  'Omnath, Locus of Mana',
-  'Omnath, Locus of Rage',
-  'Omnath, Locus of the Roil',
-  'Omnath, Locus of Creation',
-  'A-Omnath, Locus of Creation',
-  'Henrika Domnathi // Henrika, Infernal Seer',
-].map((val) => new StringSelectMenuOptionBuilder().setLabel(val).setValue(val));
-
-const rng = () => Math.floor(Math.random() * 2);
+import SuccessButtonBuilder from './src/handlers/ComponentBuilders/SuccessButtonBuilder';
+import DropDownBuilder from './src/handlers/ComponentBuilders/DropDownBuilder';
+import SuccessRowBuilder from './src/handlers/ComponentBuilders/SuccessRowBuilder';
+import AmbiguousRowBuilder from './src/handlers/ComponentBuilders/AmbiguousRowBuilder';
+import * as response from './test.json';
+import AbstractComponentBuilder, {
+  AllBuilderTypes,
+} from './src/handlers/ComponentBuilders/AbstractComponentBuilder';
 
 const client = new Client({
   intents: [
@@ -62,33 +35,30 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
 
   if (message.content.toLowerCase() === 'button') {
-    const success = new ButtonBuilder()
-      .setLabel('Lightning Bolt')
-      .setCustomId(`Success:${rng()}:77c6fa74-5543-42ac-9ead-0e890b188e99`)
-      .setStyle(ButtonStyle.Success);
+    const successRows = response.successful
+      .map(
+        ({ scryfall }) => new SuccessButtonBuilder(scryfall.name, scryfall.id)
+      )
+      .map((builder) => {
+        const row = new SuccessRowBuilder();
+        row.addComponent(builder.createComponent());
+        return row.createComponent();
+      });
 
-    const auto1 = new StringSelectMenuBuilder()
-      .setCustomId(`Auto:${rng()}:Thal`)
-      .setPlaceholder('Too many cards match ambiguous name “thal”')
-      .setOptions(thal);
+    const ambiguousRows = response.failed
+      .filter(({ scryfall }) => scryfall.type === 'ambiguous')
+      .map(({ scryfall }) => new DropDownBuilder(scryfall.details))
+      .map((builder) => {
+        const row = new AmbiguousRowBuilder();
+        row.addComponent(builder.createComponent());
+        return row.createComponent();
+      });
 
-    const auto2 = new StringSelectMenuBuilder()
-      .setCustomId(`Auto:${rng()}:Omnath`)
-      .setPlaceholder('Too many cards match ambiguous name “omnath”')
-      .setOptions(omnath);
-
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(success);
-
-    const row2 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-      auto1
-    );
-    const row3 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-      auto2
-    );
+    const components = [...successRows, ...ambiguousRows];
 
     await message.reply({
       content: 'Choose your starter!',
-      components: [row, row2, row3],
+      components,
     });
   }
 });
@@ -106,7 +76,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       .components.map((comp): any => comp.data)
       .map((data) => {
         const [type, id, meta] = data.custom_id.split(':');
-        const newId = `${type}:${rng()}:${meta}`;
+        const newId = `${type}:${Math.random()}:${meta}`;
         const rebuiltButton = new ButtonBuilder(data);
         rebuiltButton.setCustomId(newId);
         return rebuiltButton;
@@ -130,7 +100,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         .map((comp): any => comp.data)
         .map((data) => {
           const [type, id, meta] = data.custom_id.split(':');
-          const newId = `${type}:${rng()}:${meta}`;
+          const newId = `${type}:${Math.random()}:${meta}`;
           const rebuiltMenu = new StringSelectMenuBuilder(data);
           rebuiltMenu.setCustomId(newId);
           return rebuiltMenu;
