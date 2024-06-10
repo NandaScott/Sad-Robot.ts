@@ -3,11 +3,11 @@ import {
   AxiosScryfallError,
   AxiosScryfallSuccess,
   CustomResponseData,
-  CustomScryfallConfig,
 } from '../../axios';
 import AbstractHTTPService from './AbstractHTTPService';
 import ScryfallCardModel from '../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../types/ScryfallResponseError/ScryfallResponseError';
+import { Message } from 'discord.js';
 
 export type ScryfallReturn =
   | [AxiosScryfallSuccess, null]
@@ -23,7 +23,7 @@ export default class ScryfallService extends AbstractHTTPService {
   }
 
   async getCard(
-    ctx: CustomScryfallConfig['ctx'],
+    ctx: Message,
     name: string,
     mode?: 'exact' | 'fuzzy'
   ): Promise<ScryfallReturn> {
