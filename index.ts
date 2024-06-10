@@ -1,15 +1,4 @@
-import {
-  Client,
-  GatewayIntentBits,
-  Events,
-  StringSelectMenuBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ComponentType,
-  StringSelectMenuComponent,
-  ActionRow,
-} from 'discord.js';
+import { Client, GatewayIntentBits, Events } from 'discord.js';
 import * as response from './test.json';
 import SuccessfulResponseHandler from './src/handlers/SuccessfulResponseHandler/SuccessfulResponseHandler';
 import { CustomResponseData } from './axios';
@@ -17,10 +6,8 @@ import ScryfallCardModel from './src/types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from './src/types/ScryfallResponseError/ScryfallResponseError';
 import AmbiguousResponseBuilder from './src/handlers/AmbiguousResponseHandler/AmbiguousResponseHandler';
 import ErrorsResponseBuilder from './src/handlers/ErrorsResponseBuilder/ErrorsResponseBuilder';
-import SuccessButtonBuilder from './src/handlers/ComponentBuilders/SuccessButtonBuilder';
-import DropDownBuilder from './src/handlers/ComponentBuilders/DropDownBuilder';
-import SuccessRowBuilder from './src/handlers/ComponentBuilders/SuccessRowBuilder';
-import AmbiguousRowBuilder from './src/handlers/ComponentBuilders/AmbiguousRowBuilder';
+import AmbiguousHandler from './src/handlers/Interactions/AmbiguousHandler';
+import SuccessRows from './src/handlers/Interactions/SuccessRows';
 
 const mockResponse = response as unknown as {
   successful: CustomResponseData<ScryfallCardModel>[];
@@ -70,92 +57,12 @@ client.on(Events.MessageCreate, async (message) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isStringSelectMenu()) {
-    const selectedValue = interaction.values[0];
+    const successRows = SuccessRows.handleSuccessRows(interaction);
 
-    // === Start handling success rows ===
-
-    const buttonRows = interaction.message.components
-      // Capture only button rows
-      .filter((row) =>
-        row.components.every((comp) => comp.type === ComponentType.Button)
-      );
-
-    const successRows =
-      buttonRows.length === 0 // Check to see if any button rows exist
-        ? [new SuccessRowBuilder()] // If they don't create a single row builder
-        : buttonRows // Otherwise, work with the rows we have.
-            // Transform component data into data for row builder
-            .map((row) =>
-              row.components.map((comp) => ({
-                ...comp.data,
-                customId: comp.customId,
-              }))
-            )
-            // Create a new set of row builders, and rebuild the button components
-            .map((rowData) => {
-              const row = new SuccessRowBuilder();
-              rowData.forEach((compData) => {
-                if (compData.type === ComponentType.Button) {
-                  if (!compData.label) throw new Error(); // TODO
-                  if (!compData.customId) throw new Error(); // TODO
-
-                  const cardId = compData.customId.split(':').pop();
-                  if (!cardId) throw new Error(); // TODO
-
-                  const button = new SuccessButtonBuilder(
-                    compData.label,
-                    cardId
-                  );
-                  row.addComponent(button.createComponent());
-                }
-              });
-              return row;
-            });
-
-    const lastSuccessRow = successRows.every(
-      (row) => row.row.components.length === 4
-    )
-      ? new SuccessRowBuilder()
-      : successRows.pop();
-
-    if (lastSuccessRow instanceof SuccessRowBuilder) {
-      const newButton = new SuccessButtonBuilder(selectedValue, selectedValue);
-      lastSuccessRow.addComponent(newButton.createComponent());
-    }
-
-    if (lastSuccessRow !== undefined) {
-      successRows.push(lastSuccessRow);
-    }
-
-    const finalSuccesses = successRows.map((row) => row.createComponent());
-
-    // === End handling success rows ===
-
-    // === Start handling ambiguous rows ===
-
-    const dropdownRows = interaction.message.components
-      // Capture only dropdown rows
-      .filter(
-        (row): row is ActionRow<StringSelectMenuComponent> =>
-          row.components[0].data.type === ComponentType.StringSelect &&
-          row.components[0].customId !== interaction.customId
-      )
-      .map((rowData) => {
-        const compData = rowData.components[0];
-        if (compData.placeholder === null) throw new Error();
-
-        const row = new AmbiguousRowBuilder();
-        const dropdown = new DropDownBuilder(compData.placeholder);
-        row.addComponent(dropdown.createComponent());
-        return row.createComponent();
-      });
-
-    // === End handling ambiguous rows ===
-
-    const components = [...finalSuccesses, ...dropdownRows];
+    const dropdownRows = AmbiguousHandler.handleAmbiguousRows(interaction);
 
     await interaction.update({
-      components,
+      components: [...successRows, ...dropdownRows],
     });
   }
 });
