@@ -7,16 +7,14 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ComponentType,
-  AnyComponentBuilder,
 } from 'discord.js';
 import SuccessButtonBuilder from './src/handlers/ComponentBuilders/SuccessButtonBuilder';
 import DropDownBuilder from './src/handlers/ComponentBuilders/DropDownBuilder';
 import SuccessRowBuilder from './src/handlers/ComponentBuilders/SuccessRowBuilder';
 import AmbiguousRowBuilder from './src/handlers/ComponentBuilders/AmbiguousRowBuilder';
 import * as response from './test.json';
-import AbstractComponentBuilder, {
-  AllBuilderTypes,
-} from './src/handlers/ComponentBuilders/AbstractComponentBuilder';
+import chunkArray from './src/utils/chunk-array';
+import CardErrorBuilder from './src/handlers/EmbedBuilders/CardErrorBuilder';
 
 const client = new Client({
   intents: [
@@ -27,23 +25,20 @@ const client = new Client({
   ],
 });
 
-client.on(Events.ClientReady, () => {
+client.on(Events.ClientReady, async (event) => {
   console.log(`Logged in as ${client.user?.tag}`);
-});
+  const defaultChannel = await client.channels.fetch('351895958780379148');
 
-client.on(Events.MessageCreate, async (message) => {
-  if (message.author.bot) return;
+  if (defaultChannel?.isTextBased()) {
+    const successRows = response.successful.map(
+      ({ scryfall }) => new SuccessButtonBuilder(scryfall.name, scryfall.id)
+    );
 
-  if (message.content.toLowerCase() === 'button') {
-    const successRows = response.successful
-      .map(
-        ({ scryfall }) => new SuccessButtonBuilder(scryfall.name, scryfall.id)
-      )
-      .map((builder) => {
-        const row = new SuccessRowBuilder();
-        row.addComponent(builder.createComponent());
-        return row.createComponent();
-      });
+    const successChunks = chunkArray(successRows, 4).map((chunk) => {
+      const row = new SuccessRowBuilder();
+      chunk.forEach((builder) => row.addComponent(builder.createComponent()));
+      return row.createComponent();
+    });
 
     const ambiguousRows = response.failed
       .filter(({ scryfall }) => scryfall.type === 'ambiguous')
@@ -54,13 +49,28 @@ client.on(Events.MessageCreate, async (message) => {
         return row.createComponent();
       });
 
-    const components = [...successRows, ...ambiguousRows];
+    const errors = response.failed
+      .filter(
+        ({ scryfall }) =>
+          scryfall.code === 'not_found' && scryfall.type !== 'ambiguous'
+      )
+      .map(({ scryfall }) => {
+        const errorEmbed = new CardErrorBuilder(scryfall.details);
+        return errorEmbed.create();
+      });
 
-    await message.reply({
-      content: 'Choose your starter!',
+    const components = [...successChunks, ...ambiguousRows];
+
+    await defaultChannel.send({
+      content: 'Here are your cards!',
       components,
+      embeds: [...errors],
     });
   }
+});
+
+client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot) return;
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

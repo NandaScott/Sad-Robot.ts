@@ -2,9 +2,9 @@ import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
 import AbstractComponentBuilder from './AbstractComponentBuilder';
 
 export default class SuccessRowBuilder extends AbstractComponentBuilder {
-  rowCount = 0;
+  componentCound = 0;
   row: ActionRowBuilder<ButtonBuilder>;
-  private maxRows = 5;
+  private maxComponents = 5;
 
   constructor() {
     super();
@@ -12,12 +12,12 @@ export default class SuccessRowBuilder extends AbstractComponentBuilder {
   }
 
   addComponent(component: ButtonBuilder) {
-    if (this.rowCount === this.maxRows) {
+    if (this.componentCound === this.maxComponents) {
       throw new Error(
-        `Maximum component count for this row reached (${this.maxRows})`
+        `Maximum component count for this row reached (${this.maxComponents})`
       );
     }
-    this.rowCount += 1;
+    this.componentCound += 1;
     this.row.addComponents(component);
   }
 
