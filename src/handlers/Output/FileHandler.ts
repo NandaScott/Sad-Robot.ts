@@ -1,4 +1,4 @@
-import AbstractOutputHandler from '../AbstractOutputHandler';
+import AbstractOutputHandler from './AbstractOutputHandler';
 import fs from 'node:fs';
 
 export default class FileHandler implements AbstractOutputHandler {

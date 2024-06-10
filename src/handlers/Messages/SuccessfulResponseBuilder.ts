@@ -2,11 +2,11 @@ import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
 import { CustomResponseData } from '../../../axios';
 import ScryfallCardModel from '../../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../../types/ScryfallResponseError/ScryfallResponseError';
-import SuccessButtonBuilder from '../ComponentBuilders/SuccessButtonBuilder';
+import SuccessButtonBuilder from '../../builders/ComponentBuilders/SuccessButtonBuilder';
 import chunkArray from '../../utils/chunk-array';
-import SuccessRowBuilder from '../ComponentBuilders/SuccessRowBuilder';
+import SuccessRowBuilder from '../../builders/ComponentBuilders/SuccessRowBuilder';
 
-export default class SuccessfulResponseHandler {
+export default class SuccessfulResponseBuilder {
   response: CustomResponseData<ScryfallCardModel>[];
   data:
     | SuccessButtonBuilder[]

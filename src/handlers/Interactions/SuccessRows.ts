@@ -6,8 +6,8 @@ import {
   MessageActionRowComponent,
   StringSelectMenuInteraction,
 } from 'discord.js';
-import SuccessRowBuilder from '../ComponentBuilders/SuccessRowBuilder';
-import SuccessButtonBuilder from '../ComponentBuilders/SuccessButtonBuilder';
+import SuccessRowBuilder from '../../builders/ComponentBuilders/SuccessRowBuilder';
+import SuccessButtonBuilder from '../../builders/ComponentBuilders/SuccessButtonBuilder';
 
 export default class SuccessRows {
   static handleSuccessRows(

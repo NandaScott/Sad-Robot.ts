@@ -6,8 +6,8 @@ import {
   StringSelectMenuComponent,
   StringSelectMenuInteraction,
 } from 'discord.js';
-import AmbiguousRowBuilder from '../ComponentBuilders/AmbiguousRowBuilder';
-import DropDownBuilder from '../ComponentBuilders/DropDownBuilder';
+import AmbiguousRowBuilder from '../../builders/ComponentBuilders/AmbiguousRowBuilder';
+import DropDownBuilder from '../../builders/ComponentBuilders/DropDownBuilder';
 
 export default class AmbiguousHandler {
   static handleAmbiguousRows(

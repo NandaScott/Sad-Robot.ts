@@ -2,7 +2,7 @@ import { APIEmbed } from 'discord.js';
 import { CustomResponseData } from '../../../axios';
 import ScryfallCardModel from '../../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../../types/ScryfallResponseError/ScryfallResponseError';
-import CardErrorBuilder from '../EmbedBuilders/CardErrorBuilder';
+import CardErrorBuilder from '../../builders/EmbedBuilders/CardErrorBuilder';
 
 export default class ErrorsResponseBuilder {
   response: CustomResponseData<ScryfallResponseError>[];

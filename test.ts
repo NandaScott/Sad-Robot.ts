@@ -3,7 +3,7 @@ import blackhole from './src/configs/mock-axios';
 import scryfall from './src/configs/scryfall-axios';
 import ImageUriError from './src/errors/ImageUriError';
 import ScryfallError from './src/errors/ScryfallError';
-import OutputFactory from './src/handlers/OutputHandlers/OutputFactory';
+import OutputFactory from './src/handlers/Output/OutputFactory';
 import CardNameParser from './src/parsers/CardNameParser';
 import ScryfallService from './src/services/ScryfallService';
 

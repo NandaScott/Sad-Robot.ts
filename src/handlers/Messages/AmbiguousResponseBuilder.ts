@@ -2,8 +2,8 @@ import { ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
 import { CustomResponseData } from '../../../axios';
 import ScryfallCardModel from '../../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../../types/ScryfallResponseError/ScryfallResponseError';
-import DropDownBuilder from '../ComponentBuilders/DropDownBuilder';
-import AmbiguousRowBuilder from '../ComponentBuilders/AmbiguousRowBuilder';
+import DropDownBuilder from '../../builders/ComponentBuilders/DropDownBuilder';
+import AmbiguousRowBuilder from '../../builders/ComponentBuilders/AmbiguousRowBuilder';
 
 export default class AmbiguousResponseBuilder {
   response: CustomResponseData<ScryfallResponseError>[];

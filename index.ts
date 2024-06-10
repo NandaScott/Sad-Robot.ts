@@ -1,13 +1,15 @@
 import { Client, GatewayIntentBits, Events } from 'discord.js';
 import * as response from './test.json';
-import SuccessfulResponseHandler from './src/handlers/SuccessfulResponseHandler/SuccessfulResponseHandler';
 import { CustomResponseData } from './axios';
 import ScryfallCardModel from './src/types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from './src/types/ScryfallResponseError/ScryfallResponseError';
-import AmbiguousResponseBuilder from './src/handlers/AmbiguousResponseHandler/AmbiguousResponseHandler';
-import ErrorsResponseBuilder from './src/handlers/ErrorsResponseBuilder/ErrorsResponseBuilder';
 import AmbiguousHandler from './src/handlers/Interactions/AmbiguousHandler';
 import SuccessRows from './src/handlers/Interactions/SuccessRows';
+import {
+  AmbiguousResponseBuilder,
+  ErrorsResponseBuilder,
+  SuccessfulResponseBuilder,
+} from './src/handlers/Messages';
 
 const mockResponse = response as unknown as {
   successful: CustomResponseData<ScryfallCardModel>[];
@@ -31,7 +33,7 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
 
   if (message.content.toLowerCase() === 'test fetch') {
-    const successes = new SuccessfulResponseHandler(
+    const successes = new SuccessfulResponseBuilder(
       mockResponse
     ).createSuccessRows();
 

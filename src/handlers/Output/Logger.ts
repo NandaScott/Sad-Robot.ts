@@ -1,5 +1,5 @@
 import path from 'path';
-import FileHandler from './FileHandler/FileHandler';
+import FileHandler from './FileHandler';
 
 export default class Logger {
   private logLevel: 'info' | 'warning' | 'error' = 'info';

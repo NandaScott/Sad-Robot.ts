@@ -1,7 +1,7 @@
 import Logger from './Logger';
 import NoOutputSpecified from '../../errors/NoOutputSpecified';
-import FileHandler from './FileHandler/FileHandler';
-import ReplyHandler from './ReplyHandler/ReplyHandler';
+import FileHandler from './FileHandler';
+import ReplyHandler from './ReplyHandler';
 
 export default class OutputFactory {
   static createOutput(outputTo: 'logs'): Logger;
