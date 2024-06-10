@@ -18,25 +18,24 @@ export default class ScryfallCardFactory {
     this.context = ctx;
   }
 
+  isSingleFacedCard(data: typeof this.data): data is SingleFacedCard {
+    return data.layout in singleLayouts;
+  }
+
+  isMultiFacedCard(data: typeof this.data): data is MutliFacedCard {
+    return data.layout in doubleLayouts;
+  }
+
   createCard(): SingleFacedScryfallCard | DoubleFacedScryfallCard {
-    if (this.data.layout in singleLayouts) {
-      return new SingleFacedScryfallCard(
-        this.data as SingleFacedCard,
-        this.context
-      );
+    if (this.isSingleFacedCard(this.data)) {
+      return new SingleFacedScryfallCard(this.data, this.context);
     }
 
-    if (this.data.layout in doubleLayouts) {
-      return new DoubleFacedScryfallCard(
-        this.data as MutliFacedCard,
-        this.context
-      );
+    if (this.isMultiFacedCard(this.data)) {
+      return new DoubleFacedScryfallCard(this.data, this.context);
     }
 
-    throw new LayoutNotFound(
-      `Layout not found for ${this.data.name}`,
-      this.context
-    );
+    throw new LayoutNotFound('Layout not found.', this.context);
   }
 }
 
