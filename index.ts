@@ -8,13 +8,18 @@ import {
   ButtonStyle,
   ComponentType,
 } from 'discord.js';
-import SuccessButtonBuilder from './src/handlers/ComponentBuilders/SuccessButtonBuilder';
-import DropDownBuilder from './src/handlers/ComponentBuilders/DropDownBuilder';
-import SuccessRowBuilder from './src/handlers/ComponentBuilders/SuccessRowBuilder';
-import AmbiguousRowBuilder from './src/handlers/ComponentBuilders/AmbiguousRowBuilder';
 import * as response from './test.json';
-import chunkArray from './src/utils/chunk-array';
-import CardErrorBuilder from './src/handlers/EmbedBuilders/CardErrorBuilder';
+import SuccessfulResponseHandler from './src/handlers/SuccessfulResponseHandler/SuccessfulResponseHandler';
+import { CustomResponseData } from './axios';
+import ScryfallCardModel from './src/types/ScryfallCardModel/ScryfallCardModel';
+import ScryfallResponseError from './src/types/ScryfallResponseError/ScryfallResponseError';
+import AmbiguousResponseBuilder from './src/handlers/AmbiguousResponseHandler/AmbiguousResponseHandler';
+import ErrorsResponseBuilder from './src/handlers/ErrorsResponseBuilder/ErrorsResponseBuilder';
+
+const mockResponse = response as unknown as {
+  successful: CustomResponseData<ScryfallCardModel>[];
+  failed: CustomResponseData<ScryfallResponseError>[];
+};
 
 const client = new Client({
   intents: [
@@ -30,36 +35,17 @@ client.on(Events.ClientReady, async (event) => {
   const defaultChannel = await client.channels.fetch('351895958780379148');
 
   if (defaultChannel?.isTextBased()) {
-    const successRows = response.successful.map(
-      ({ scryfall }) => new SuccessButtonBuilder(scryfall.name, scryfall.id)
-    );
+    const successes = new SuccessfulResponseHandler(
+      mockResponse
+    ).createSuccessRows();
 
-    const successChunks = chunkArray(successRows, 4).map((chunk) => {
-      const row = new SuccessRowBuilder();
-      chunk.forEach((builder) => row.addComponent(builder.createComponent()));
-      return row.createComponent();
-    });
+    const ambiguous = new AmbiguousResponseBuilder(
+      mockResponse
+    ).createAmbiguousRows();
 
-    const ambiguousRows = response.failed
-      .filter(({ scryfall }) => scryfall.type === 'ambiguous')
-      .map(({ scryfall }) => new DropDownBuilder(scryfall.details))
-      .map((builder) => {
-        const row = new AmbiguousRowBuilder();
-        row.addComponent(builder.createComponent());
-        return row.createComponent();
-      });
+    const errors = new ErrorsResponseBuilder(mockResponse).createEmbeds();
 
-    const errors = response.failed
-      .filter(
-        ({ scryfall }) =>
-          scryfall.code === 'not_found' && scryfall.type !== 'ambiguous'
-      )
-      .map(({ scryfall }) => {
-        const errorEmbed = new CardErrorBuilder(scryfall.details);
-        return errorEmbed.create();
-      });
-
-    const components = [...successChunks, ...ambiguousRows];
+    const components = [...successes, ...ambiguous];
 
     await defaultChannel.send({
       content: 'Here are your cards!',
