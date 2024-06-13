@@ -9,6 +9,9 @@ import {
 import { MockAxios, ScryfallAxios } from './src/configs';
 import { ScryfallService } from './src/services';
 import CardNameParser from './src/parsers/CardNameParser';
+import CardIdParser from './src/parsers/CardIdParser';
+import ScryfallCardFactory from './src/handlers/ScryfallCard/ScryfallCardFactory';
+import CardReplyBuilder from './src/builders/EmbedBuilders/CardReplyBuilder';
 
 const axiosConfig = Bun.argv.includes('--network-no-op')
   ? MockAxios
@@ -64,14 +67,30 @@ client.on(Events.MessageCreate, async (message) => {
     const components = [...successes, ...ambiguous];
 
     await message.reply({
-      content: 'Here are your cards!',
       components,
-      embeds: [...errors],
+      embeds: errors,
     });
   }
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.isButton()) {
+    const [type, rng, idOrName] = interaction.customId.split(':');
+    const getData = CardIdParser.parse(idOrName)
+      ? scryfallService.getById(interaction, idOrName)
+      : scryfallService.getCard(interaction, idOrName);
+
+    const [card, error] = await getData;
+    if (error) throw new Error();
+    const cardHandler = new ScryfallCardFactory(
+      card.data.scryfall,
+      interaction
+    ).createCard();
+
+    const embeds = new CardReplyBuilder(cardHandler).create();
+
+    await interaction.reply({ embeds, ephemeral: true });
+  }
   if (interaction.isStringSelectMenu()) {
     const successRows = SuccessRows.handleSuccessRows(interaction);
 

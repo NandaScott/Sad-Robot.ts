@@ -1,17 +1,14 @@
-import {
-  AxiosScryfallError,
-  CustomResponseData,
-  CustomScryfallConfig,
-} from '../../axios';
+import { Interaction, Message } from 'discord.js';
+import { AxiosScryfallError, CustomResponseData } from '../../axios';
 import ScryfallResponseError from '../types/ScryfallResponseError/ScryfallResponseError';
 import CustomError from './CustomError';
 
 export default class ScryfallError extends CustomError {
   name: string = 'ScryfallError';
-  context: CustomScryfallConfig['ctx'];
+  context: Message | Interaction;
   data: CustomResponseData<ScryfallResponseError> | undefined;
 
-  constructor(error: AxiosScryfallError, ctx: CustomScryfallConfig['ctx']) {
+  constructor(error: AxiosScryfallError, ctx: Message | Interaction) {
     super(error.message);
     this.context = ctx;
     this.data = error.response?.data;

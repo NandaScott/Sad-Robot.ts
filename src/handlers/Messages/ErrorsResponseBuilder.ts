@@ -27,9 +27,11 @@ export default class ErrorsResponseBuilder {
   }
 
   createEmbeds(): APIEmbed[] {
-    return this.data.map(({ details }) => {
-      const errorEmbed = new CardErrorBuilder(details);
-      return errorEmbed.create();
-    });
+    return this.data
+      .map(({ details }) => {
+        const errorEmbed = new CardErrorBuilder(details);
+        return errorEmbed.create();
+      })
+      .reduce((prev, curr) => [...prev, ...curr], []);
   }
 }

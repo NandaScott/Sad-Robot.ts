@@ -1,13 +1,8 @@
-import { CustomScryfallConfig } from '../../axios';
-import CustomError from './CustomError';
-
-export default class NoOutputSpecified extends CustomError {
+export default class NoOutputSpecified extends Error {
   name: string = 'NoOutputSpecified';
-  context: CustomScryfallConfig['ctx'];
 
-  constructor(message: string, ctx?: CustomScryfallConfig['ctx']) {
+  constructor(message: string) {
     super(message);
-    this.context = ctx;
     Object.setPrototypeOf(this, NoOutputSpecified.prototype);
   }
 }

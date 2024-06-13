@@ -7,7 +7,7 @@ import {
 import AbstractHTTPService from './AbstractHTTPService';
 import ScryfallCardModel from '../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../types/ScryfallResponseError/ScryfallResponseError';
-import { Message } from 'discord.js';
+import { Interaction, Message } from 'discord.js';
 import ScryfallAutocomplete from '../types/ScryfallAutocomplete/ScryfallAutocomplete';
 
 export type ScryfallReturn =
@@ -27,8 +27,22 @@ export default class ScryfallService extends AbstractHTTPService {
     return 'isAxiosError' in err && err.isAxiosError;
   }
 
+  async getById(
+    ctx: Message | Interaction,
+    id: string
+  ): Promise<ScryfallReturn> {
+    try {
+      const card = await this.axios.get(`/cards/${id}`, { ctx });
+      return [card, null];
+    } catch (err) {
+      if (!this.isAxiosScryfallError(err)) throw err;
+
+      return [null, err];
+    }
+  }
+
   async getCard(
-    ctx: Message,
+    ctx: Message | Interaction,
     name: string,
     mode?: 'exact' | 'fuzzy'
   ): Promise<ScryfallReturn> {

@@ -1,11 +1,11 @@
-import { CustomScryfallConfig } from '../../axios';
+import { Interaction, Message } from 'discord.js';
 import CustomError from './CustomError';
 
 export default class ImageUriError extends CustomError {
   name: string = 'ImageUriError';
-  context: CustomScryfallConfig['ctx'];
+  context: Message | Interaction;
 
-  constructor(message: string, ctx: CustomScryfallConfig['ctx']) {
+  constructor(message: string, ctx: Message | Interaction) {
     super(message);
     this.context = ctx;
 

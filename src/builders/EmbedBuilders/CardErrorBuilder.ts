@@ -13,7 +13,7 @@ export default class CardErrorBuilder extends AbstractEmbedBuilder {
     const embed = new EmbedBuilder({
       color: Colors.Red,
       title: this.error,
-    });
-    return embed.data;
+    }).data;
+    return [embed];
   }
 }

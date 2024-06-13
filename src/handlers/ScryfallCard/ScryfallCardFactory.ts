@@ -6,14 +6,14 @@ import ScryfallCardModel, {
   SingleFacedCard,
 } from '../../types/ScryfallCardModel/ScryfallCardModel';
 import SingleFacedScryfallCard from './SingleFacedScryfallCard';
-import { CustomScryfallConfig } from '../../../axios';
 import LayoutNotFound from '../../errors/LayoutNotFound';
+import { Interaction, Message } from 'discord.js';
 
 export default class ScryfallCardFactory {
   private data: ScryfallCardModel;
-  private context: CustomScryfallConfig['ctx'];
+  private context: Message | Interaction;
 
-  constructor(data: ScryfallCardModel, ctx: CustomScryfallConfig['ctx']) {
+  constructor(data: ScryfallCardModel, ctx: Message | Interaction) {
     this.data = data;
     this.context = ctx;
   }
