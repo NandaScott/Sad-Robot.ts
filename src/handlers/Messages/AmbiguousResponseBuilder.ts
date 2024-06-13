@@ -62,7 +62,10 @@ export default class AmbiguousResponseBuilder {
       throw new Error();
     }
 
-    this.data = this.data.map(({ details }) => new DropDownBuilder(details));
+    this.data = this.data.map(
+      ({ details, autocomplete }) =>
+        new DropDownBuilder(details, autocomplete ?? [])
+    );
   }
 
   buildActionRows() {

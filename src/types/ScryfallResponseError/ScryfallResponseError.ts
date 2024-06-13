@@ -13,4 +13,6 @@ export default interface ScryfallResponseError {
   /** If your input also generated non-failure warnings, they will be
    * provided as human-readable strings in this array. */
   warnings?: string[];
+  /** Not native to Scryfall, but if a card response is "ambiguous" we will manually supply possible solutions. */
+  autocomplete?: string[];
 }

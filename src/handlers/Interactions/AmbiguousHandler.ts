@@ -26,7 +26,8 @@ export default class AmbiguousHandler {
           if (compData.placeholder === null) throw new Error();
 
           const row = new AmbiguousRowBuilder();
-          const dropdown = new DropDownBuilder(compData.placeholder);
+          const options = compData.options.map((opt) => opt.label);
+          const dropdown = new DropDownBuilder(compData.placeholder, options);
           row.addComponent(dropdown.createComponent());
           return row.createComponent();
         })

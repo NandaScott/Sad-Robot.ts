@@ -8,6 +8,7 @@ import AbstractHTTPService from './AbstractHTTPService';
 import ScryfallCardModel from '../types/ScryfallCardModel/ScryfallCardModel';
 import ScryfallResponseError from '../types/ScryfallResponseError/ScryfallResponseError';
 import { Message } from 'discord.js';
+import ScryfallAutocomplete from '../types/ScryfallAutocomplete/ScryfallAutocomplete';
 
 export type ScryfallReturn =
   | [AxiosScryfallSuccess, null]
@@ -22,6 +23,10 @@ export default class ScryfallService extends AbstractHTTPService {
     this.axios = axios;
   }
 
+  isAxiosScryfallError(err: any): err is AxiosScryfallError {
+    return 'isAxiosError' in err && err.isAxiosError;
+  }
+
   async getCard(
     ctx: Message,
     name: string,
@@ -34,10 +39,20 @@ export default class ScryfallService extends AbstractHTTPService {
       });
 
       return [card, null];
-    } catch (err: any) {
-      if (!err.isAxiosError) throw err;
+    } catch (err) {
+      if (!this.isAxiosScryfallError(err)) throw err;
 
-      return [null, err as AxiosScryfallError];
+      if (err.response?.data.scryfall.type === 'ambiguous') {
+        const { data: axiosData, status } = await this.axios.get<
+          CustomResponseData<ScryfallAutocomplete>
+        >('/cards/autocomplete', {
+          params: { q: name },
+        });
+        if (status >= 400) throw new Error('Autocomplete failed');
+        err.response.data.scryfall.autocomplete = axiosData.scryfall.data;
+      }
+
+      return [null, err];
     }
   }
 

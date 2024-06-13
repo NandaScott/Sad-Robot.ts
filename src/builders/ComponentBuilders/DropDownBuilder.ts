@@ -10,12 +10,12 @@ export default class DropDownBuilder extends AbstractComponentBuilder {
   options: StringSelectMenuOptionBuilder[] = [];
   placeholder: string;
 
-  constructor(placeholder: string) {
+  constructor(placeholder: string, options: string[]) {
     super();
     this.placeholder = placeholder;
     this.dropdownId = [this.type, Math.random()].join(':');
     // Mock network call to autocomplete
-    this.options = ['Card1', 'Card2', 'Card3'].map(
+    this.options = options.map(
       (opt) => new StringSelectMenuOptionBuilder({ label: opt, value: opt })
     );
   }
