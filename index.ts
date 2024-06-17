@@ -12,6 +12,8 @@ import CardNameParser from './src/parsers/CardNameParser';
 import CardIdParser from './src/parsers/CardIdParser';
 import ScryfallCardFactory from './src/handlers/ScryfallCard/ScryfallCardFactory';
 import CardReplyBuilder from './src/builders/EmbedBuilders/CardReplyBuilder';
+import ClientReady from './src/event-listeners/discord/ClientReady';
+import intents from './src/utils/intents';
 
 const axiosConfig = Bun.argv.includes('--network-no-op')
   ? MockAxios
@@ -20,17 +22,11 @@ const axiosConfig = Bun.argv.includes('--network-no-op')
 const scryfallService = new ScryfallService(axiosConfig);
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds, // Required for Guild interaction
-    GatewayIntentBits.GuildMessages, // Required to listen for messages
-    GatewayIntentBits.MessageContent, // Required to read message contents
-    GatewayIntentBits.DirectMessages, // Required to send emphemeral messages
-  ],
+  intents,
 });
 
-client.on(Events.ClientReady, async (event) => {
-  console.log(`Logged in as ${client.user?.tag}`);
-});
+const ready = new ClientReady();
+client.on(ready.event, ready.exec);
 
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
