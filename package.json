@@ -2,6 +2,10 @@
   "name": "sad-robot",
   "module": "index.ts",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20.9.0",
+    "npm": ">=10.8.1"
+  },
   "scripts": {
     "dev": "bun --watch index.ts",
     "build": "tsc ./index.ts --module commonjs --outDir ./build",
