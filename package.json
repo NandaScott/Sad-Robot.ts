@@ -1,9 +1,10 @@
 {
   "name": "sad-robot",
   "module": "index.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch index.ts",
+    "build": "tsc ./index.ts --module commonjs --outDir ./build"
   },
   "devDependencies": {
     "bun-types": "latest"

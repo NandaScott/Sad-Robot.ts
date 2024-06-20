@@ -1,16 +1,13 @@
+import 'dotenv/config';
 import { Client } from 'discord.js';
-import { MockAxios, ScryfallAxios } from './src/configs';
+import { ScryfallAxios } from './src/configs';
 import { ScryfallService } from './src/services';
 import ClientReady from './src/event-listeners/discord/ClientReady';
 import intents from './src/utils/intents';
 import MessageCreate from './src/event-listeners/discord/MessageCreate';
 import InteractionCreate from './src/event-listeners/discord/InteractionCreate';
 
-const axiosConfig = Bun.argv.includes('--network-no-op')
-  ? MockAxios
-  : ScryfallAxios;
-
-const scryfallService = new ScryfallService(axiosConfig);
+const scryfallService = new ScryfallService(ScryfallAxios);
 
 const client = new Client({
   intents,
