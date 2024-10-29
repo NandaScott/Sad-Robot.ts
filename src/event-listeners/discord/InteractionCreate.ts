@@ -6,6 +6,7 @@ import ScryfallCardFactory from '../../handlers/ScryfallCard/ScryfallCardFactory
 import CardReplyBuilder from '../../builders/EmbedBuilders/CardReplyBuilder';
 import SuccessRows from '../../handlers/Interactions/SuccessRows';
 import AmbiguousHandler from '../../handlers/Interactions/AmbiguousHandler';
+import HypergeoCommand from '../../commands/HypergeoCommand';
 
 export default class InteractionCreate extends AbstractEventListener<
   ClientEvents,
@@ -45,6 +46,11 @@ export default class InteractionCreate extends AbstractEventListener<
       await interaction.update({
         components: [...successRows, ...dropdownRows],
       });
+    }
+    if (interaction.isChatInputCommand()) {
+      if (interaction.commandName === 'hypergeo') {
+        new HypergeoCommand().exec(interaction);
+      }
     }
   }
 }
