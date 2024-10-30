@@ -8,6 +8,8 @@ var ClientReady_1 = require("./src/event-listeners/discord/ClientReady");
 var intents_1 = require("./src/utils/intents");
 var MessageCreate_1 = require("./src/event-listeners/discord/MessageCreate");
 var InteractionCreate_1 = require("./src/event-listeners/discord/InteractionCreate");
+var HypergeoCommand_1 = require("./src/commands/HypergeoCommand");
+var SlashCommandHandler_1 = require("./src/commands/SlashCommandHandler");
 var scryfallService = new services_1.ScryfallService(configs_1.ScryfallAxios);
 var client = new discord_js_1.Client({
     intents: intents_1.default,
@@ -20,4 +22,7 @@ var interactionCreate = new InteractionCreate_1.default(scryfallService);
 client.on(interactionCreate.event, function (interaction) {
     return interactionCreate.exec(interaction);
 });
+var commandHandler = new SlashCommandHandler_1.default();
+commandHandler.registerCommand(HypergeoCommand_1.default);
+commandHandler.sendRequest();
 client.login(process.env.TOKEN);

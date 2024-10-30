@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "bun --watch index.ts",
-    "build": "tsc ./index.ts --module commonjs --outDir ./build",
+    "build": "tsc ./index.ts --skipLibCheck --outDir ./build",
     "start": "node ./build/index.js"
   },
   "devDependencies": {

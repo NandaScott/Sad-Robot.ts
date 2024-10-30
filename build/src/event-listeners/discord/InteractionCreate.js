@@ -67,6 +67,7 @@ var ScryfallCardFactory_1 = require("../../handlers/ScryfallCard/ScryfallCardFac
 var CardReplyBuilder_1 = require("../../builders/EmbedBuilders/CardReplyBuilder");
 var SuccessRows_1 = require("../../handlers/Interactions/SuccessRows");
 var AmbiguousHandler_1 = require("../../handlers/Interactions/AmbiguousHandler");
+var HypergeoCommand_1 = require("../../commands/HypergeoCommand");
 var InteractionCreate = /** @class */ (function (_super) {
     __extends(InteractionCreate, _super);
     function InteractionCreate(scryfallService) {
@@ -107,7 +108,13 @@ var InteractionCreate = /** @class */ (function (_super) {
                     case 4:
                         _c.sent();
                         _c.label = 5;
-                    case 5: return [2 /*return*/];
+                    case 5:
+                        if (interaction.isChatInputCommand()) {
+                            if (interaction.commandName === 'hypergeo') {
+                                new HypergeoCommand_1.default().exec(interaction);
+                            }
+                        }
+                        return [2 /*return*/];
                 }
             });
         });
