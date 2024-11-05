@@ -2,6 +2,7 @@ import {
   ActionRow,
   ActionRowBuilder,
   ButtonBuilder,
+  ButtonComponent,
   ComponentType,
   MessageActionRowComponent,
   StringSelectMenuInteraction,
@@ -36,8 +37,11 @@ export default class SuccessRows {
             // Create a new set of row builders, and rebuild the button components
             .map((rowData) => {
               const row = new SuccessRowBuilder();
+              function test(data: any): data is ButtonComponent {
+                return data.type === ComponentType.Button;
+              }
               rowData.forEach((compData) => {
-                if (compData.type === ComponentType.Button) {
+                if (test(compData)) {
                   if (!compData.label) throw new Error(); // TODO
                   if (!compData.customId) throw new Error(); // TODO
 

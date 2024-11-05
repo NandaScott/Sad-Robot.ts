@@ -1,28 +1,24 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv/config");
-var discord_js_1 = require("discord.js");
-var configs_1 = require("./src/configs");
-var services_1 = require("./src/services");
-var ClientReady_1 = require("./src/event-listeners/discord/ClientReady");
-var intents_1 = require("./src/utils/intents");
-var MessageCreate_1 = require("./src/event-listeners/discord/MessageCreate");
-var InteractionCreate_1 = require("./src/event-listeners/discord/InteractionCreate");
-var HypergeoCommand_1 = require("./src/commands/HypergeoCommand");
-var SlashCommandHandler_1 = require("./src/commands/SlashCommandHandler");
-var scryfallService = new services_1.ScryfallService(configs_1.ScryfallAxios);
-var client = new discord_js_1.Client({
-    intents: intents_1.default,
+import 'dotenv/config';
+import { Client } from 'discord.js';
+import { ScryfallAxios } from "./src/configs/index.js";
+import { ScryfallService } from "./src/services/index.js";
+import ClientReady from "./src/event-listeners/discord/ClientReady.js";
+import intents from "./src/utils/intents.js";
+import MessageCreate from "./src/event-listeners/discord/MessageCreate.js";
+import InteractionCreate from "./src/event-listeners/discord/InteractionCreate.js";
+import HypergeoCommand from "./src/commands/HypergeoCommand.js";
+import SlashCommandHandler from "./src/commands/SlashCommandHandler.js";
+const scryfallService = new ScryfallService(ScryfallAxios);
+const client = new Client({
+  intents
 });
-var ready = new ClientReady_1.default();
-client.on(ready.event, function (client) { return ready.exec(client); });
-var messageCreate = new MessageCreate_1.default(scryfallService);
-client.on(messageCreate.event, function (message) { return messageCreate.exec(message); });
-var interactionCreate = new InteractionCreate_1.default(scryfallService);
-client.on(interactionCreate.event, function (interaction) {
-    return interactionCreate.exec(interaction);
-});
-var commandHandler = new SlashCommandHandler_1.default();
-commandHandler.registerCommand(HypergeoCommand_1.default);
+const ready = new ClientReady();
+client.on(ready.event, client => ready.exec(client));
+const messageCreate = new MessageCreate(scryfallService);
+client.on(messageCreate.event, message => messageCreate.exec(message));
+const interactionCreate = new InteractionCreate(scryfallService);
+client.on(interactionCreate.event, interaction => interactionCreate.exec(interaction));
+const commandHandler = new SlashCommandHandler();
+commandHandler.registerCommand(HypergeoCommand);
 commandHandler.sendRequest();
 client.login(process.env.TOKEN);

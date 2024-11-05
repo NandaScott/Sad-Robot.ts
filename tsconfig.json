@@ -6,7 +6,6 @@
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
-    "noEmit": true,
     "composite": true,
     "strict": true,
     "downlevelIteration": true,
@@ -19,7 +18,10 @@
       "bun-types" // add Bun global
     ],
     "outDir": "./build",
-    "checkJs": false
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true
   },
   "exclude": ["node_modules", "build"]
 }

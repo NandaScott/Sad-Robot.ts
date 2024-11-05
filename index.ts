@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config.js';
 import { Client } from 'discord.js';
 import { ScryfallAxios } from './src/configs';
 import { ScryfallService } from './src/services';

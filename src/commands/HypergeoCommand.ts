@@ -1,6 +1,7 @@
 import {
   Interaction,
   InteractionResponse,
+  RESTPostAPIChatInputApplicationCommandsJSONBody,
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
 } from 'discord.js';
@@ -158,7 +159,7 @@ export default class HypergeoCommand implements AbstractSlashCommand {
     return interaction.reply(message.join('\n'));
   }
 
-  toJSON() {
+  toJSON(): RESTPostAPIChatInputApplicationCommandsJSONBody {
     return this.data.toJSON();
   }
 }

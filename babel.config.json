@@ -1,0 +1,16 @@
+{
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "modules": false,
+        "targets": {
+          "node": "20"
+        }
+      }
+    ],
+    "@babel/typescript"
+  ],
+  "plugins": ["add-import-extension"],
+  "ignore": ["node_modules", "*.d.ts", "**/__tests__/**"]
+}

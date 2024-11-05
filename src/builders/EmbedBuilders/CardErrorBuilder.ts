@@ -1,4 +1,4 @@
-import { Colors, EmbedBuilder } from 'discord.js';
+import { APIEmbed, Colors, EmbedBuilder } from 'discord.js';
 import AbstractEmbedBuilder from './AbstractEmbedBuilder';
 
 export default class CardErrorBuilder extends AbstractEmbedBuilder {
@@ -9,7 +9,7 @@ export default class CardErrorBuilder extends AbstractEmbedBuilder {
     this.error = error;
   }
 
-  create() {
+  create(): APIEmbed[] {
     const embed = new EmbedBuilder({
       color: Colors.Red,
       title: this.error,
